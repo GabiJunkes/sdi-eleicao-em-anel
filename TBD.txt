@@ -1,0 +1,48 @@
+Quando entrar na fila, 
+multicast anuciando id e 
+ouve multicate com min e lider
+
+
+ouve multicast(id_do_novo_cara):
+    max = id_do_novo_cara
+    se (for lider):
+        manda min e lider_id
+
+ouve network(min, lider):
+    min = min
+    lider = lider
+
+
+while:
+    se lider morreu E ja nao mandou:
+        envia_msg(Eleicao{id, id, id})
+
+envia_msg(msg):
+    proximo = (id + 1) mod max
+    while proximo nao renponde E msg.dono!=proximo:
+        proximo = (proximo + 1) mod max
+
+ouve_eleicao(Eleicao):
+    se Eleicao.dono == id:
+        envia_msg(Eleito{id})
+        break
+    se id > Eleicao.mairId:
+        envia_msg(Eleicao{dono, id, minId})
+    senao
+        se id < Eleicao.minId:
+        envia_msg(Eleicao{dono, maxId, id})
+
+ouve_eleito(id):
+    lider = id
+
+
+
+Eleicao {
+    dono: number,
+    mairId: number,
+    minId: number
+}
+
+Eleito {
+    number,
+}

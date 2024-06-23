@@ -1,0 +1,23 @@
+{
+  "name": "sdi-eleicao-em-anel",
+  "version": "1.0.0",
+  "description": "Trabalho de sistemas distribuidos sobre eleição em anel, comparando TCP e QUIC",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielFJunkes/sdi-eleicao-em-anel.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GabrielFJunkes/sdi-eleicao-em-anel/issues"
+  },
+  "homepage": "https://github.com/GabrielFJunkes/sdi-eleicao-em-anel#readme",
+  "dependencies": {
+    "node-quic-client": "^0.2.0"
+  }
+}
