@@ -1,3 +1,12 @@
-// Lucas
-// recebe msg para escrever no arquivo de log e adiciona tempo atual na msg quando escreve
-// [timestamp] [noId]: msg
+import { writeFileSync } from 'fs';
+
+export default function logger(noId, msg) {
+    const timestamp = new Date().toISOString().replace('T', ' ').replace(/\..*$/, '');
+    const newLine = `${timestamp} ${noId}: ${msg}\n`;
+
+    try {
+        writeFileSync('./logs.txt', newLine, { flag: 'a' });
+    } catch (error) {
+        console.error(`${error}`);
+    }
+}
