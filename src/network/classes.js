@@ -13,6 +13,14 @@ export class Elected {
   }
 }
 
+export function getMessageType(message) {
+  if (message.hasOwnProperty('ownerId')) {
+    return 'Election'
+  } else if (message.hasOwnProperty('nodeId')) {
+    return 'Elected'
+  }
+}
+
 // Classes relacionadas a multicast
 export class Join {
   constructor(nodeId) {

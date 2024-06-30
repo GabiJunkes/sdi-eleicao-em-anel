@@ -7,6 +7,7 @@
 import { Quic } from "./network/quic/main.js";
 import { TCP } from "./network/tcp/main.js";
 import { Election } from "./network/classes.js";
+import * as classes from './network/classes.js'
 
 
 const quic1 = new TCP(1);
@@ -16,4 +17,6 @@ const election2 = new Election(2, 2, 2)
 const election1 = new Election(1, 1, 1);
 quic2.send(1, election2);
 
-quic1.getMessage()
+await new Promise((r) => setTimeout(r, 100));
+const msg = quic1.getMessage()
+console.log(classes.getMessageType(msg))
