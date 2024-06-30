@@ -1,31 +1,44 @@
 //implementar o handshake do tls para o tcp
-import tls from 'tls';
-import { generateSSL } from './ssl.js';//ajustar o caminho
+import tls from "tls";
+import { generateSSL } from "../../crypto/ssl.js"; //ajustar o caminho
 
-const ssl = generateSSL('0.0.0.0');
+export class TCP {
+  constructor(id) {
+    this.id = id;
+    this.ssl = generateSSL(this.id);
+    this.received = new Array();
 
-// Opções para o cliente TLS
-const options = {
-    host: 'localhost',
-    port: 8000,
-    rejectUnauthorized: false, //usado para evitar que rejeite a conexao caso o certificado não seja autorizado
-    ca: [ssl.cert] // Certificado do servidor
-};
+    this.server = tls.createServer({
+      key: this.ssl.private,
+      cert: this.ssl.cert,
+      host: "127.0.0.1",
+      port: 5000 + this.id,
+    });
 
-const client = tls.connect(options, () => {
-    console.log('conexao feita');
-    client.write('ola do cliente');
-});
+    this.server.addListener("secureConnection", (socket) => {
+      socket.on("data", (elem) => {
+        const data = JSON.parse(elem);
+        console.log(data);
+        this.received.push(data);
+      });
+    });
 
-client.on('data', (data) => {
-    console.log('recebido:', data.toString());
-    client.end();
-});
+    this.server.listen(5000 + this.id);
+  }
 
-client.on('end', () => {
-    console.log('conexao encerrada');
-});
+  getMessage() {
+    return this.received.shift();
+  }
 
-client.on('error', (err) => {
-  console.error('Erro do cliente:', err);
-});
+  send(id, msg) {
+    this.options = {
+      host: "127.0.0.1",
+      port: 5000 + id,
+      rejectUnauthorized: false, //usado para evitar que rejeite a conexao caso o certificado não seja autorizado
+      ca: [this.ssl.cert], // Certificado do servidor
+    };
+    const client = tls.connect(this.options, () => {
+      client.write(Buffer.from(JSON.stringify(msg)));
+    });
+  }
+}
