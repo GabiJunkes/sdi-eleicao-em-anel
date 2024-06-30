@@ -19,6 +19,7 @@
   "homepage": "https://github.com/GabrielFJunkes/sdi-eleicao-em-anel#readme",
   "dependencies": {
     "@matrixai/quic": "^1.2.8",
-    "selfsigned": "^2.4.1"
+    "selfsigned": "^2.4.1",
+    "tls": "^0.0.1"
   }
 }

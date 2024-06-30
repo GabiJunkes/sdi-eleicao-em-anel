@@ -1,5 +1,5 @@
 // Classes relacionadas a eleição
-class Election {
+export class Election {
   constructor(ownerId, maxId, minId) {
     this.ownerId = ownerId;
     this.maxId = maxId;
@@ -7,20 +7,20 @@ class Election {
   }
 }
 
-class Elected {
+export class Elected {
   constructor(nodeId) {
     this.nodeId = nodeId;
   }
 }
 
 // Classes relacionadas a multicast
-class Join {
+export class Join {
   constructor(nodeId) {
     this.nodeId = nodeId;
   }
 }
 
-class Welcome{
+export class Welcome{
   constructor(minId, leaderId) {
     this.minId = minId;
     this.leaderId = leaderId;
