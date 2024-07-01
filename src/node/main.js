@@ -10,16 +10,15 @@ function calcNext(myId, count, max,) {
 }
 
 async function sendMessageUntilSucceed(network, id, max, message) {
-  let sended = false;
   let count = 0;
-  while (!sended) {
+  while (true) {
     count++;
     const nextId = calcNext(id, count, max);
     try {
-      console.log("send:", id, count, nextId);
+      console.log(id, "sent", nextId, "", message);
       if (nextId != id) {
         await network.send(nextId, message);
-        sended = true;
+        break
       }
     } catch (e) {
       console.log('falha ao mandar para ', nextId);
@@ -50,37 +49,42 @@ async function run(id, networkType, leaderId, maxId) {
   setInterval(async () => {
     const message = network.getMessage();
     if (!!message) {
-      switch (classes.getMessageType(message)) {
+      switch (message.type) {
         case "Election": {
-          if (message.ownerId == id) { // election ended
+          if (message.ownerId == id) {
+            // election ended
             const responseMessage = new classes.Elected(id, message.maxId);
             await sendMessageUntilSucceed(network, id, max, responseMessage);
           } else if (id > message.maxId) {
-            const responseMessage = new classes.Election(
-              message.ownerId,
-              id,
-              message.minId
-            );
+            const responseMessage = new classes.Election(message.ownerId, id);
             await sendMessageUntilSucceed(network, id, max, responseMessage);
           } else {
             const responseMessage = new classes.Election(
               message.ownerId,
-              message.maxId,
-              message.minId > id ? id : message.minId // get min id
+              message.maxId
             );
             await sendMessageUntilSucceed(network, id, max, responseMessage);
           }
+          break
         }
         case "Elected": {
           leader = message.nodeId;
           if (message.ownerId != id) {
-            await sendMessageUntilSucceed(network, id, max, message);
+            const responseMessage = new classes.Elected(
+              message.ownerId,
+              message.nodeId
+            );
+            await sendMessageUntilSucceed(network, id, max, responseMessage);
           }
+          break
+        }
+        default: {
+          throw Error('DEU RUIM')
         }
       }
     } else {
       if (isLeaderDead) {
-        const newElection = new classes.Election(id,id,id)
+        const newElection = new classes.Election(id, id)
         await sendMessageUntilSucceed(network, id, max, newElection);
         isLeaderDead = false;
       }

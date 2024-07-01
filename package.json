@@ -18,12 +18,13 @@
   },
   "homepage": "https://github.com/GabrielFJunkes/sdi-eleicao-em-anel#readme",
   "dependencies": {
+    "@matrixai/logger": "^4.0.2",
     "@matrixai/quic": "^1.2.8",
-    "selfsigned": "^2.4.1",
-    "tls": "^0.0.1",
     "@noble/ed25519": "^2.1.0",
     "@peculiar/webcrypto": "^1.5.0",
     "@peculiar/x509": "^1.11.0",
-    "fast-check": "^3.19.0"
+    "fast-check": "^3.19.0",
+    "selfsigned": "^2.4.1",
+    "tls": "^0.0.1"
   }
 }

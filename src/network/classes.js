@@ -1,27 +1,19 @@
 // Classes relacionadas a eleição
 export class Election {
-  constructor(ownerId, maxId, minId) {
+  constructor(ownerId, maxId) {
+    this.type = "Election";
     this.ownerId = ownerId;
     this.maxId = maxId;
-    this.minId = minId;
   }
 }
 
 export class Elected {
   constructor(ownerId, nodeId) {
+    this.type = "Elected";
     this.ownerId = ownerId;
     this.nodeId = nodeId;
   }
 }
-
-export function getMessageType(message) {
-  if (message.hasOwnProperty("maxId")) {
-    return "Election";
-  } else if (message.hasOwnProperty("nodeId")) {
-    return "Elected";
-  }
-}
-
 // Classes relacionadas a multicast
 export class Join {
   constructor(nodeId) {

@@ -18,7 +18,6 @@ export class TCP {
     this.server.addListener("secureConnection", (socket) => {
       socket.on("data", (elem) => {
         const data = JSON.parse(elem);
-        console.log(data);
         this.received.push(data);
       });
     });
@@ -36,9 +35,12 @@ export class TCP {
       port: 5000 + id,
       rejectUnauthorized: false, //usado para evitar que rejeite a conexao caso o certificado não seja autorizado
       ca: [this.ssl.cert], // Certificado do servidor
+      timeout: 400,
     };
+    console.log('antes')
     const client = tls.connect(this.options, () => {
       client.write(Buffer.from(JSON.stringify(msg)));
     });
+    console.log("depois");
   }
 }

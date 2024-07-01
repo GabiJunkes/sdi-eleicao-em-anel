@@ -5,8 +5,6 @@
 import {
   Worker,
   isMainThread,
-  parentPort,
-  workerData,
 } from "node:worker_threads";
 import * as node from "./node/main.js";
 
@@ -20,10 +18,9 @@ if (isMainThread) {
   console.log("spawning");
   let leader = 2;
   let count = 7;
-  let netType = "quic";
+  let netType = "tcp";
   let workers = new Array();
   for (let id = 1; id <= count; id++) {
-    console.log("spawning", id);
     const worker = new Worker("./src/node/main.js", {
       workerData: { id, netType, leader, max: count },
     });
@@ -45,6 +42,4 @@ if (isMainThread) {
   //   workers[warnId - 1].postMessage("leaderDied");
   //   rl.close();
   // });
-} else {
-  console.log("else");
 }

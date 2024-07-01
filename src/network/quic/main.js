@@ -1,9 +1,8 @@
 // Gab
 // DOC: https://github.com/nodejs/quic/blob/master/doc/api/quic.md
-
+import Logger, { LogLevel } from "@matrixai/logger";
 import quic from "@matrixai/quic";
 import * as utils from "../../crypto/utils.js";
-
 export class Quic {
   constructor(id, key, keyPairRSAPEM, certRSAPEM) {
     this.id = id;
@@ -46,6 +45,7 @@ export class Quic {
         key: quicInstance.keyPairRSAPEM.privateKey,
         cert: quicInstance.certRSAPEM,
       },
+      logger: new Logger('root', LogLevel.SILENT, []),
     });
 
     // add listener when server receives data
@@ -86,6 +86,7 @@ export class Quic {
         verifyPeer: false,
         maxIdleTimeout: 400,
       },
+      logger: new Logger("root", LogLevel.SILENT, []),
     });
 
     const stream = client.connection.newStream("uni");
