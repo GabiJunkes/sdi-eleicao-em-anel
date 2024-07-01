@@ -6,8 +6,9 @@ import * as classes from "../network/classes.js";
 import { isMainThread, workerData, parentPort } from "node:worker_threads";
 
 function calcNext(myId, count, max) {
-  let value = (myId + count) % max;
-  if (value == myId) value = (value + 1) % max;
+  let value = (myId + max) % max;
+  if (value == myId) value = (myId + max) % max;
+  if (value == 0) value = max;
   return value;
 }
 

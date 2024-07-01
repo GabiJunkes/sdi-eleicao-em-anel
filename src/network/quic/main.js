@@ -65,13 +65,6 @@ export class Quic {
       }
     );
 
-    quicInstance.quicServer.addEventListener(
-      quic.events.EventQUICConnectionStart.name,
-      async (streamEvent) => {
-        console.log(streamEvent);
-      }
-    );
-
     // start listening
     await quicInstance.quicServer.start({
       host: "::ffff:127.0.0.1",
