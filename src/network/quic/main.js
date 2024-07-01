@@ -13,7 +13,7 @@ export class Quic {
     this.quickServer = null;
     this.received = new Array();
   }
-    
+
   getMessage() {
     return this.received.shift();
   }
@@ -45,7 +45,7 @@ export class Quic {
       config: {
         key: quicInstance.keyPairRSAPEM.privateKey,
         cert: quicInstance.certRSAPEM,
-        },
+      },
     });
 
     // add listener when server receives data
@@ -56,7 +56,7 @@ export class Quic {
         const reader = detail.readable.getReader();
         await reader.read().then(({ done, value }) => {
           const data = JSON.parse(value);
-          console.log(quicInstance.id, 'recebeu:', data)
+          console.log(quicInstance.id, "recebeu:", data);
           quicInstance.received.push(data);
           if (done) {
             reader.releaseLock();
@@ -64,10 +64,17 @@ export class Quic {
         });
       }
     );
-      
+
+    quicInstance.quicServer.addEventListener(
+      quic.events.EventQUICConnectionStart.name,
+      async (streamEvent) => {
+        console.log(streamEvent);
+      }
+    );
+
     // start listening
     await quicInstance.quicServer.start({
-      host: "127.0.0.1",
+      host: "::ffff:127.0.0.1",
       port: 5000 + quicInstance.id,
       ipv6Only: false,
     });

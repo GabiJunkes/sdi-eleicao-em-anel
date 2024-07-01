@@ -2,21 +2,49 @@
 // doc https://nodejs.org/api/worker_threads.html
 // interface pra matar nos, finalizar execucao (close em todas as threads), parse de logs e printar logs
 // parse de logs = tempo de eleicao
+import {
+  Worker,
+  isMainThread,
+  parentPort,
+  workerData,
+} from "node:worker_threads";
+import * as node from "./node/main.js";
 
+import readline from "node:readline";
 
-import { Quic } from "./network/quic/main.js";
-import { TCP } from "./network/tcp/main.js";
-import { Election } from "./network/classes.js";
-import * as classes from './network/classes.js'
-
-
-const quic1 = new TCP(1);
-const quic2 = new TCP(2);
-
-const election2 = new Election(2, 2, 2)
-const election1 = new Election(1, 1, 1);
-quic2.send(1, election2);
-
-await new Promise((r) => setTimeout(r, 100));
-const msg = quic1.getMessage()
-console.log(classes.getMessageType(msg))
+if (isMainThread) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  console.log("spawning");
+  let leader = 2;
+  let count = 3;
+  let netType = "quic";
+  let workers = new Array();
+  for (let id = 1; id <= count; id++) {
+    console.log("spawning", id);
+    const worker = new Worker("./src/node/main.js", {
+      workerData: { id, netType, leader, max: count },
+    });
+    worker.on("newLeader", (leaderId) => {
+      leader = leaderId;
+    });
+    worker.on("exit", () => {
+      console.log("desligando");
+    });
+    workers.push(worker);
+  }
+  await new Promise((r) => setTimeout(r, 500));
+  const warnId = 1;
+  workers[leader - 1].terminate();
+  workers[warnId - 1].postMessage("leaderDied");
+  // rl.question(`Matar lider?`, (warnId) => {
+  //     console.log("matar", warnId);
+  //   workers[leader-1].terminate()
+  //   workers[warnId - 1].postMessage("leaderDied");
+  //   rl.close();
+  // });
+} else {
+  console.log("else");
+}

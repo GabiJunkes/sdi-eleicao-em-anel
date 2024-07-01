@@ -8,16 +8,17 @@ export class Election {
 }
 
 export class Elected {
-  constructor(nodeId) {
+  constructor(ownerId, nodeId) {
+    this.ownerId = ownerId;
     this.nodeId = nodeId;
   }
 }
 
 export function getMessageType(message) {
-  if (message.hasOwnProperty('ownerId')) {
-    return 'Election'
-  } else if (message.hasOwnProperty('nodeId')) {
-    return 'Elected'
+  if (message.hasOwnProperty("maxId")) {
+    return "Election";
+  } else if (message.hasOwnProperty("nodeId")) {
+    return "Elected";
   }
 }
 
