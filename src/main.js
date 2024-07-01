@@ -19,7 +19,7 @@ if (isMainThread) {
   });
   console.log("spawning");
   let leader = 2;
-  let count = 3;
+  let count = 7;
   let netType = "quic";
   let workers = new Array();
   for (let id = 1; id <= count; id++) {
@@ -36,7 +36,7 @@ if (isMainThread) {
     workers.push(worker);
   }
   await new Promise((r) => setTimeout(r, 500));
-  const warnId = 1;
+  const warnId = 3;
   workers[leader - 1].terminate();
   workers[warnId - 1].postMessage("leaderDied");
   // rl.question(`Matar lider?`, (warnId) => {

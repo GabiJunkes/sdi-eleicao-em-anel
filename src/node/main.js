@@ -1,13 +1,10 @@
-// Toda a logica de um no (definido em TDB.txt) e abstraido um objeto de quic ou tcp
-
 import { Quic } from "../network/quic/main.js";
 import { TCP } from "../network/tcp/main.js";
 import * as classes from "../network/classes.js";
 import { isMainThread, workerData, parentPort } from "node:worker_threads";
 
-function calcNext(myId, count, max) {
-  let value = (myId + max) % max;
-  if (value == myId) value = (myId + max) % max;
+function calcNext(myId, count, max,) {
+  let value = (myId + count + max) % max;
   if (value == 0) value = max;
   return value;
 }
@@ -17,11 +14,15 @@ async function sendMessageUntilSucceed(network, id, max, message) {
   let count = 0;
   while (!sended) {
     count++;
+    const nextId = calcNext(id, count, max);
     try {
-      await network.send(calcNext(id, count, max), message);
-      sended = true;
+      console.log("send:", id, count, nextId);
+      if (nextId != id) {
+        await network.send(nextId, message);
+        sended = true;
+      }
     } catch (e) {
-      console.log(e);
+      console.log('falha ao mandar para ', nextId);
     }
   }
 }
@@ -51,10 +52,8 @@ async function run(id, networkType, leaderId, maxId) {
     if (!!message) {
       switch (classes.getMessageType(message)) {
         case "Election": {
-          // election ended
-          console.log(id, message)
-          if (message.ownerId == id) {
-            const responseMessage = new classes.Elected(message.maxId);
+          if (message.ownerId == id) { // election ended
+            const responseMessage = new classes.Elected(id, message.maxId);
             await sendMessageUntilSucceed(network, id, max, responseMessage);
           } else if (id > message.maxId) {
             const responseMessage = new classes.Election(

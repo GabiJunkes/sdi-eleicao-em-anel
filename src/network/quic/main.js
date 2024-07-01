@@ -56,7 +56,6 @@ export class Quic {
         const reader = detail.readable.getReader();
         await reader.read().then(({ done, value }) => {
           const data = JSON.parse(value);
-          console.log(quicInstance.id, "recebeu:", data);
           quicInstance.received.push(data);
           if (done) {
             reader.releaseLock();
@@ -85,6 +84,7 @@ export class Quic {
       },
       config: {
         verifyPeer: false,
+        maxIdleTimeout: 400,
       },
     });
 
@@ -92,5 +92,6 @@ export class Quic {
     const writer = stream.writable.getWriter();
     await writer.write(Buffer.from(JSON.stringify(msg)));
     await writer.close();
+    
   }
 }
