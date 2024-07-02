@@ -7,8 +7,8 @@ import {
 if (isMainThread) {
   console.log("spawning");
   let leader = 2;
-  let count = 10;
-  let netType = "tcp";
+  let count = 50;
+  let netType = "quic";
   let workers = new Array();
   for (let id = 1; id <= count; id++) {
     const worker = new Worker("./src/node/main.js", {
@@ -25,5 +25,7 @@ if (isMainThread) {
   await new Promise((r) => setTimeout(r, 500));
   const warnId = 3;
   workers[leader - 1].terminate();
+  // workers[warnId + 2].postMessage("leaderDied");
+  // await new Promise((r) => setTimeout(r, 500));
   workers[warnId - 1].postMessage("leaderDied");
 }
