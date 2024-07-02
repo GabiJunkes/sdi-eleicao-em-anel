@@ -1,24 +1,14 @@
-// instancia nós
 // doc https://nodejs.org/api/worker_threads.html
-// interface pra matar nos, finalizar execucao (close em todas as threads), parse de logs e printar logs
-// parse de logs = tempo de eleicao
 import {
   Worker,
   isMainThread,
 } from "node:worker_threads";
-import * as node from "./node/main.js";
-
-import readline from "node:readline";
 
 if (isMainThread) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
   console.log("spawning");
   let leader = 2;
-  let count = 7;
-  let netType = "quic";
+  let count = 10;
+  let netType = "tcp";
   let workers = new Array();
   for (let id = 1; id <= count; id++) {
     const worker = new Worker("./src/node/main.js", {
@@ -36,10 +26,4 @@ if (isMainThread) {
   const warnId = 3;
   workers[leader - 1].terminate();
   workers[warnId - 1].postMessage("leaderDied");
-  // rl.question(`Matar lider?`, (warnId) => {
-  //     console.log("matar", warnId);
-  //   workers[leader-1].terminate()
-  //   workers[warnId - 1].postMessage("leaderDied");
-  //   rl.close();
-  // });
 }

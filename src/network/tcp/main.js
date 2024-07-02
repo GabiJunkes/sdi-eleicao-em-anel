@@ -1,4 +1,3 @@
-//implementar o handshake do tls para o tcp
 import tls from "tls";
 import { generateSSL } from "../../crypto/ssl.js"; //ajustar o caminho
 
@@ -36,7 +35,7 @@ export class TCP {
         port: 5000 + id,
         rejectUnauthorized: false, //usado para evitar que rejeite a conexao caso o certificado não seja autorizado
         ca: [this.ssl.cert], // Certificado do servidor
-        timeout: 400,
+        timeout: 10,
       };
       const stream = tls.connect(this.options);
       stream.once("secureConnect", () => {

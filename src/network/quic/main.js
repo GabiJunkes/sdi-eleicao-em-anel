@@ -1,5 +1,3 @@
-// Gab
-// DOC: https://github.com/nodejs/quic/blob/master/doc/api/quic.md
 import Logger, { LogLevel } from "@matrixai/logger";
 import quic from "@matrixai/quic";
 import * as utils from "../../crypto/utils.js";
@@ -84,7 +82,7 @@ export class Quic {
       },
       config: {
         verifyPeer: false,
-        maxIdleTimeout: 400,
+        maxIdleTimeout: 10,
       },
       logger: new Logger("root", LogLevel.SILENT, []),
     });
