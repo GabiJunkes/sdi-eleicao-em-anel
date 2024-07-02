@@ -18,7 +18,7 @@ if (isMainThread) {
   console.log("spawning");
   let leader = 2;
   let count = 7;
-  let netType = "tcp";
+  let netType = "quic";
   let workers = new Array();
   for (let id = 1; id <= count; id++) {
     const worker = new Worker("./src/node/main.js", {

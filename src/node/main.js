@@ -2,6 +2,7 @@ import { Quic } from "../network/quic/main.js";
 import { TCP } from "../network/tcp/main.js";
 import * as classes from "../network/classes.js";
 import { isMainThread, workerData, parentPort } from "node:worker_threads";
+import logger from './logger.js'
 
 function calcNext(myId, count, max,) {
   let value = (myId + count + max) % max;
@@ -14,8 +15,8 @@ async function sendMessageUntilSucceed(network, id, max, message) {
   while (true) {
     count++;
     const nextId = calcNext(id, count, max);
+    logger(id, 'envia '+message.type+' para '+nextId);
     try {
-      console.log(id, "sent", nextId, "", message);
       if (nextId != id) {
         await network.send(nextId, message);
         break
